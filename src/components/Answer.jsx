@@ -3,7 +3,7 @@ export default function Answer({ answers }) {
     <div id="answers">
       {answers.map((answer, id) => (
         <div className="answer" key={id}>
-          <button className="correct">{answer}</button>
+          <button>{answer}</button>
         </div>
       ))}
     </div>
