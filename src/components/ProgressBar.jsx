@@ -1,30 +1,33 @@
 import { useState, useEffect } from "react";
-let classez = "";
-export default function ProgrressBar({ satate, time }) {
-  const [timeRemaning, setTimeRemaining] = useState(time);
+export default function ProgrressBar({ mode, timeOut, onTimeOut }) {
+  const [remainingTime, setRemainingTime] = useState(timeout);
+
   useEffect(() => {
-    const timeInterval = setInterval(() => {
-      setTimeRemaining((prevtime) => {
-        const newvalue = +(prevtime - 10);
-        if (newvalue < 0) {
-          //clearInterval(timeInterval);
-          if (classez === "") {
-            classez = "answered";
-          } else {
-            classez = "";
-          }
-          return time;
-        }
-        return newvalue;
-      });
-    }, 10);
+    console.log("SETTING TIMEOUT");
+    const timer = setTimeout(onTimeOut, timeOut);
+
     return () => {
-      clearInterval(timeInterval);
+      clearTimeout(timer);
+    };
+  }, [timeOut, onTimeOut]);
+
+  useEffect(() => {
+    console.log("SETTING INTERVAL");
+    const interval = setInterval(() => {
+      setRemainingTime((prevRemainingTime) => prevRemainingTime - 10);
+    }, 10);
+
+    return () => {
+      clearInterval(interval);
     };
   }, []);
+
   return (
-    <>
-      <progress className={classez} value={timeRemaning} max={time}></progress>
-    </>
+    <progress
+      id="question-time"
+      max={timeout}
+      value={remainingTime}
+      className={mode}
+    />
   );
 }
