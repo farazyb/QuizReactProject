@@ -5,6 +5,7 @@ export const QuizContext = createContext({
   userAnswers: [],
   answerState: "",
   handleOnAnswer: () => {},
+  handleSkipAnswer: () => {},
 });
 
 function QuizReducer(state, action) {
@@ -20,6 +21,11 @@ function QuizReducer(state, action) {
         ...state,
         answerState: action.payload.answerState,
       };
+    case "ON_SKIP":
+      return {
+        userAnswers: [],
+        answerState: "",
+      };
     default:
       return state;
   }
@@ -33,7 +39,6 @@ export default function QuizContextProvider({ children }) {
 
   const handleOnAnswer = useCallback(
     (answer) => {
-      console.log(answer);
       const qId = quizState.userAnswers.length; // Adjusted to reflect current question ID before update
       const isCorrect = answer === QUESTIONS[qId]?.answers[0]; // Safe access in case of out-of-bound index
 
@@ -59,13 +64,24 @@ export default function QuizContextProvider({ children }) {
         }, 2000);
       }, 1000);
     },
-    [quizState.userAnswers.length]
+    [quizState]
   ); // Dependency on userAnswers.length to ensure correct question ID calculation
+
+  const handleSkipAnswer = useCallback(
+    () => handleOnAnswer(null),
+    [handleOnAnswer]
+  );
+  function handleOnSkip() {
+    quizDispatch({
+      type: "ON_SKIP",
+    });
+  }
 
   const quizCtxValue = {
     userAnswers: quizState.userAnswers,
     answerState: quizState.answerState,
     handleOnAnswer: handleOnAnswer,
+    handleSkipAnswer: handleSkipAnswer,
   };
 
   return (

@@ -1,12 +1,19 @@
-import { useContext } from "react";
-import { QuizContext } from "../store/Quiz-Context-2";
+import { useState ,useEffect} from "react";
 import PropTypes from "prop-types";
-export default function Answer({ answers }) {
-  const { handleOnAnswer, answerState, userAnswers } = useContext(QuizContext);
+export default function Answer({ answers, userAnswers, handleOnAnswer, answerState }) {
+
+  
+  const [shuffledAnswers, setShuffledAnswers] = useState([]);
+
+  useEffect(() => {
+    // Clone the answers array and shuffle it
+    const shuffle = [...answers].sort(() => Math.random() - 0.5);
+    setShuffledAnswers(shuffle);
+  }, [answers]);
 
   return (
     <ul id="answers">
-      {answers.map((answer) => {
+      {shuffledAnswers.map((answer) => {
         const isSelected = userAnswers[userAnswers.length - 1] === answer;
         let cssclass = "";
         if (answerState === "answered" && isSelected) {
@@ -18,10 +25,13 @@ export default function Answer({ answers }) {
         ) {
           cssclass = answerState;
         }
-
         return (
           <li className="answer" key={answer}>
-            <button className={cssclass} onClick={() => handleOnAnswer(answer)}>
+            <button
+              className={cssclass}
+              onClick={() => handleOnAnswer(answer)}
+              disabled={answerState !== "" }
+            >
               {answer}
             </button>
           </li>

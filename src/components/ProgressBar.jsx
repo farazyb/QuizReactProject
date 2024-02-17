@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 export default function ProgrressBar({ mode, timeOut, onTimeOut }) {
-  const [remainingTime, setRemainingTime] = useState(timeout);
+  const [remainingTime, setRemainingTime] = useState(timeOut);
 
   useEffect(() => {
-    console.log("SETTING TIMEOUT");
     const timer = setTimeout(onTimeOut, timeOut);
 
     return () => {
@@ -12,7 +11,6 @@ export default function ProgrressBar({ mode, timeOut, onTimeOut }) {
   }, [timeOut, onTimeOut]);
 
   useEffect(() => {
-    console.log("SETTING INTERVAL");
     const interval = setInterval(() => {
       setRemainingTime((prevRemainingTime) => prevRemainingTime - 10);
     }, 10);
@@ -25,7 +23,7 @@ export default function ProgrressBar({ mode, timeOut, onTimeOut }) {
   return (
     <progress
       id="question-time"
-      max={timeout}
+      max={timeOut}
       value={remainingTime}
       className={mode}
     />
